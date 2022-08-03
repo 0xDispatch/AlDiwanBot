@@ -9,3 +9,5 @@
 مصدر الأبيات [aldiwan.net](https://aldiwan.net)
 
 اذا تحتاج مساعدة تقدر تكلمني على تويتر هنا [Dispatch33@](https://twitter.com/Dispatch33) 
+
+لا تنسى تعطيني نجمة {:
