@@ -8,10 +8,10 @@ import time
 import tweepy
 import random
 
-CK="4IGSmuUDnEXcl81svERUSN29m"
-CS ="1mLYENfSkHeTx1OLVYOhLRNUetCsTRqkbysriG6xWHUbFCiSdY"
-AT="1423671340134014983-uhC80nLBATjY7fVXvUeNrf3UD7Qik5"
-AS = "oKLAUv2Y0MTFXCCnWSrNqoMljWsU0Sq9TLOYTDuiWszIg"
+CK="your consumer_key"
+CS ="your consumer_secret"
+AT="your access_token"
+AS = "access_token_secret"
 
 auth = tweepy.OAuthHandler(CK, CS)
 auth.set_access_token(AT, AS) 
