@@ -5,18 +5,21 @@ from pyarabic.araby import strip_tatweel, strip_shadda
 from pyarabic import araby
 import time
 import tweepy
+import random
 
-CK= "your consumer_key"
-CS ="Your consumer_secret"
-AT="your access_token"
-AS = "your access_token_secret"
+CK="4IGSmuUDnEXcl81svERUSN29m"
+CS ="1mLYENfSkHeTx1OLVYOhLRNUetCsTRqkbysriG6xWHUbFCiSdY"
+AT="1423671340134014983-uhC80nLBATjY7fVXvUeNrf3UD7Qik5"
+AS = "oKLAUv2Y0MTFXCCnWSrNqoMljWsU0Sq9TLOYTDuiWszIg"
 
 auth = tweepy.OAuthHandler(CK, CS)
 auth.set_access_token(AT, AS) 
 api = tweepy.API(auth) 
+choice = random.randint(1, 100)
+print(choice)
 
-def main():
-    link = f'https://www.aldiwan.net/poem{random.randint(1, 104878)}.html'
+def poem():
+    link = f'https://www.aldiwan.net/quote1291.html'
     r = requests.get(link)
     soup = BeautifulSoup(r.text, "html.parser")
     for poem in soup.findAll('div', attrs={'class': 'bet-1 row pt-0 px-5 pb-4 justify-content-center'}):
@@ -40,6 +43,36 @@ def main():
     api.update_status(status=f"الرابط\n{link}", in_reply_to_status_id=poem_tweet.id)
     print("Tweeted")
 
+def quote():
+    link = f'https://www.aldiwan.net/quote{random.randint(1, 1291)}.html'
+    r = requests.get(link)
+    soup = BeautifulSoup(r.text, "html.parser")
+    for poem in soup.findAll('div', attrs={'class': 'bet-1 text-center p-4'}):
+        tweet = '\n'.join(poem.findAll(text=True))
+        strip_tatweel(tweet)
+        araby.reduce_tashkeel(tweet)
+        sourceun = soup.find('h2', attrs={'class': 'h3-i h3'})
+        poet_name = ''.join(sourceun.findAll(text=True)).replace("المزيد من اقتباسات", " ")
+    while len(tweet) > 160:
+        link = f'https://www.aldiwan.net/quote{random.randint(1, 1291)}.html'
+        r = requests.get(link)
+        soup = BeautifulSoup(r.text, "html.parser")
+        for poem in soup.findAll('div', attrs={'class': 'bet-1 text-center p-4'}):
+            tweet = '\n'.join(poem.findAll(text=True))
+            strip_tatweel(tweet)
+            araby.reduce_tashkeel(tweet)
+            sourceun = soup.find('h2', attrs={'class': 'h3-i h3'})
+            poet_name = ''.join(sourceun.findAll(text=True)).replace("المزيد من اقتباسات", " ")
+    print(tweet)
+    print(poet_name)
+    poem_tweet = api.update_status(f"{tweet}\n{poet_name}")
+    print(poem_tweet)
+    api.update_status(status=f"الرابط\n{link}", in_reply_to_status_id=poem_tweet.id)
+    print("Tweeted")
+
 while True:
-    main()   
-    time.sleep(1800)
+    if choice > 30:
+        quote()
+    else:
+        poem()
+    time.sleep(800)
