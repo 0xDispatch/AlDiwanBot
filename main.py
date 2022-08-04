@@ -8,7 +8,7 @@ import time
 import tweepy
 import random
 
-CK="your consumer_key"
+CK="your consumer key"
 CS ="your consumer_secret"
 AT="your access_token"
 AS = "access_token_secret"
