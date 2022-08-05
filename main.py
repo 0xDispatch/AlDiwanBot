@@ -1,34 +1,39 @@
-#Hello World! 
 import requests
 import random
 from bs4 import BeautifulSoup
-from pyarabic.araby import strip_tatweel, strip_shadda
-from pyarabic import araby
 import time
 import tweepy
 import random
 
-CK="your consumer key"
-CS ="your consumer_secret"
+CK="your consumer_key"
+CS ="your consumer_secret "
 AT="your access_token"
-AS = "access_token_secret"
+AS = "your access_token_secret"
 
+#مصادقه مكتبه tweepy مايحتاج تغير فيه
 auth = tweepy.OAuthHandler(CK, CS)
 auth.set_access_token(AT, AS) 
 api = tweepy.API(auth) 
-choice = random.randint(1, 100)
-print(choice)
 
+
+
+#داله القصائد
 def poem():
-    link = f'https://www.aldiwan.net/quote1291.html'
+    #رابط القصائد العشوائي
+    link = f'https://www.aldiwan.net/poem{random.randint(1, 104878)}.html'
+    #ارسال الريكويست
     r = requests.get(link)
+    #تعريف مكتبة bs
     soup = BeautifulSoup(r.text, "html.parser")
+    #يبحث عن الابيات
     for poem in soup.findAll('div', attrs={'class': 'bet-1 row pt-0 px-5 pb-4 justify-content-center'}):
+        #يجمع الابيات في متغير واحد
         tweet = '\n'.join(poem.findAll(text=True))
-        strip_tatweel(tweet)
-        araby.reduce_tashkeel(tweet)
+        #يبحث عن اسم الشاعر
         sourceun = soup.find('h3', attrs={'class': 'text-left more h4 mt-3'})
+        #يستخرج اسم الشاعر ويشيل الكلام الزايد
         source = ''.join(sourceun.findAll(text=True)).replace("المزيد عن", "-")
+        #اذا كانت الابيات عدد احرفها فوق ال١٦٠ يرجع يختار مره ثانية ويسوي نفس الشغل فوق بالضبط لين يلقى قصيدة اقل من ١٦٠
     while len(tweet) > 160:
         link = f'https://www.aldiwan.net/poem{random.randint(1, 104878)}.html'
         r = requests.get(link)
@@ -37,43 +42,65 @@ def poem():
             tweet = '\n'.join(poem.findAll(text=True))
             sourceun = soup.find('h3', attrs={'class': 'text-left more h4 mt-3'})
             source = ''.join(sourceun.findAll(text=True)).replace("المزيد عن", "-")
+    #طباعة اسم الابيات واسم الشاعر
     print(tweet)
     print(source)
+    #متغير لأرسال تغريدة في تويتر مع الابيات واسم الشاعر
     poem_tweet = api.update_status(f"{tweet}\n{source}")
-    print(poem_tweet)
+    #يرد على التغريدة حقت القصيدة الي رسلها تو مع الرابط
     api.update_status(status=f"الرابط\n{link}", in_reply_to_status_id=poem_tweet.id)
+    #عشان تتاكد انه رسل
     print("Tweeted")
 
+#داله الاقتباس
 def quote():
+    #رابط الاقتباس العشوائي من ١ الى ١٢٩١
     link = f'https://www.aldiwan.net/quote{random.randint(1, 1291)}.html'
+    #ارسال الريكويست
     r = requests.get(link)
+    #تعريف مكتبه bs4
     soup = BeautifulSoup(r.text, "html.parser")
+    #يبحث عن الابيات
     for poem in soup.findAll('div', attrs={'class': 'bet-1 text-center p-4'}):
+        #متغير يجمع الابيات كلها
         tweet = '\n'.join(poem.findAll(text=True))
-        strip_tatweel(tweet)
-        araby.reduce_tashkeel(tweet)
+        #يبحث عن اسم الشاعر
         sourceun = soup.find('h2', attrs={'class': 'h3-i h3'})
+        #يحط اسم الشاعر في متغير ويشيل الزوائد من النص
         poet_name = ''.join(sourceun.findAll(text=True)).replace("المزيد من اقتباسات", " ")
+        #اذا كانت الابيات فوق ال١٦٠ حرف يرجع يختار مره ثانيه ويسوي كل شي الين يلقى اقل من ١٦٠ حرف
     while len(tweet) > 160:
         link = f'https://www.aldiwan.net/quote{random.randint(1, 1291)}.html'
         r = requests.get(link)
         soup = BeautifulSoup(r.text, "html.parser")
         for poem in soup.findAll('div', attrs={'class': 'bet-1 text-center p-4'}):
             tweet = '\n'.join(poem.findAll(text=True))
-            strip_tatweel(tweet)
-            araby.reduce_tashkeel(tweet)
             sourceun = soup.find('h2', attrs={'class': 'h3-i h3'})
             poet_name = ''.join(sourceun.findAll(text=True)).replace("المزيد من اقتباسات", " ")
+    #طباعة الابيات
     print(tweet)
+    #طباعه اسم الشاعر
     print(poet_name)
+    #متغير لارسال التغريدة مع الابيات واسم الشاعر في تويتر
     poem_tweet = api.update_status(f"{tweet}\n{poet_name}")
-    print(poem_tweet)
+    #يرد على التغريده الي نزلها بالرابط حق الاقتباس
     api.update_status(status=f"الرابط\n{link}", in_reply_to_status_id=poem_tweet.id)
+    #عشان تعرف انه سوا كل شي
     print("Tweeted")
 
+#اختيار رقم عشوائي لتحديد بين قصيدة او اقتباس وطباعته
+choice = random.randint(1, 10)
+print(choice)
+
+#تكرار
 while True:
-    if choice > 30:
+    #اذا كان الرقم العشوائي فوق الخمسه يختار اقتباس
+    if choice > 5:
+        print("Quote")
         quote()
+    #اذا كان الرقم تحت الخمسه يختار قصيدة
     else:
+        print("Poem")
         poem()
+    #انتظار ٨٠٠ ثانية 
     time.sleep(800)
