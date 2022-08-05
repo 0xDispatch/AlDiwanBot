@@ -1,3 +1,2 @@
 tweepy==4.10
 bs4==0.0.1
-PyArabic==0.6.15
