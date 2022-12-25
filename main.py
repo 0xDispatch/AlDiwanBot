@@ -5,6 +5,7 @@ import time
 import tweepy
 import random
 
+#twitter api keys
 CK="your consumer_key"
 CS ="your consumer_secret "
 AT="your access_token"
@@ -69,7 +70,7 @@ def quote():
         #يحط اسم الشاعر في متغير ويشيل الزوائد من النص
         poet_name = ''.join(sourceun.findAll(text=True)).replace("المزيد من اقتباسات", " ")
         #اذا كانت الابيات فوق ال١٦٠ حرف يرجع يختار مره ثانيه ويسوي كل شي الين يلقى اقل من ١٦٠ حرف
-    while len(tweet) > 160:
+    while len(tweet) > 280:
         link = f'https://www.aldiwan.net/quote{random.randint(1, 1291)}.html'
         r = requests.get(link)
         soup = BeautifulSoup(r.text, "html.parser")
@@ -88,12 +89,14 @@ def quote():
     #عشان تعرف انه سوا كل شي
     print("Tweeted")
 
-#اختيار رقم عشوائي لتحديد بين قصيدة او اقتباس وطباعته
-choice = random.randint(1, 10)
-print(choice)
+
+
 
 #تكرار
 while True:
+    #اختيار رقم عشوائي لتحديد بين قصيدة او اقتباس وطباعته
+    choice = random.randint(1, 10)
+    print(choice)
     #اذا كان الرقم العشوائي فوق الخمسه يختار اقتباس
     if choice > 5:
         print("Quote")
